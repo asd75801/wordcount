@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="30 seconds" debug="false">
+    <property name="PATH" value="logs/"></property>
+    <property name="PREFIX" value="jar-archetype-"></property>
+    <timestamp key="DAY" datePattern="yyyyMMdd"></timestamp>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d-%relative-%thread-%-5level %logger %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d-%relative-%thread-%-5level %logger %m%n</pattern>
+        </encoder>
+        <file>${PATH}${PREFIX}log-${DAY}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${PATH}${PREFIX}log-${DAY}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>20</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <logger name="org.sauceggplant" level="TRACE">
+        <appender-ref ref="CONSOLE"></appender-ref>
+    </logger>
+    <logger name="org.sauceggplant" level="DEBUG">
+        <appender-ref ref="FILE"></appender-ref>
+    </logger>
+</configuration>
