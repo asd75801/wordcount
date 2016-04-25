@@ -3,6 +3,11 @@ package org.sauceggplant.topology;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
+
+//import backtype.storm.Config;
+//import backtype.storm.LocalCluster;
+//import backtype.storm.topology.TopologyBuilder;
+
 import org.sauceggplant.bolt.LogBolt;
 import org.sauceggplant.bolt.WordCollectBolt;
 import org.sauceggplant.bolt.WordCountBolt;
@@ -26,15 +31,17 @@ public class WordCountTopologyTest {
             TopologyBuilder topologyBuilder = new TopologyBuilder();
             topologyBuilder.setSpout("WordSpout",new WordSpout(),1);
             topologyBuilder.setBolt("WordCollectBolt",new WordCollectBolt(),1)
+                    //.shuffleGrouping("WordSpout");
                     .setNumTasks(1)
                     .shuffleGrouping("WordSpout");
             topologyBuilder.setBolt("WordCountBolt",new WordCountBolt(),2)
+                    //.shuffleGrouping("WordCollectBolt");
                     .setNumTasks(1)
                     .shuffleGrouping("WordCollectBolt");
             topologyBuilder.setBolt("LogBolt",new LogBolt(),1)
+                    //.shuffleGrouping("WordCountBolt");
                     .setNumTasks(1)
                     .shuffleGrouping("WordCountBolt");
-
             Config config = new Config();
             config.setDebug(true);
             config.setMaxTaskParallelism(1);
